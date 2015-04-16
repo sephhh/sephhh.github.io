@@ -4,7 +4,7 @@
   <title><![CDATA[Category: first | Seph's Blog]]></title>
   <link href="http://sephhh.github.io/blog/categories/first/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-16T08:26:50-04:00</updated>
+  <updated>2015-04-16T09:19:55-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -98,7 +98,7 @@ The following method takes the first type of hash and adds it to the second, usi
   end
 </code></p>
 
-<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.
+<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized hash has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.
 &#8220;`ruby
 single_pants_array = [{type: &ldquo;jeans&rdquo;, color: &ldquo;blue&rdquo;},
 {type: &ldquo;slacks&rdquo;, color: &ldquo;black&rdquo;},

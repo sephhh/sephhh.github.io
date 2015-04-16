@@ -4,7 +4,7 @@
   <title><![CDATA[Seph's Blog]]></title>
   <link href="http://sephhh.github.io/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-16T08:26:50-04:00</updated>
+  <updated>2015-04-16T09:19:55-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -125,7 +125,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.</p>
+<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized hash has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
