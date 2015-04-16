@@ -4,7 +4,7 @@
   <title><![CDATA[Category: first | Seph's Blog]]></title>
   <link href="http://sephhh.github.io/blog/categories/first/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-15T21:24:02-04:00</updated>
+  <updated>2015-04-15T23:28:21-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -14,56 +14,142 @@
 
   
   <entry>
-    <title type="html"><![CDATA[My First Post on Octopress]]></title>
-    <link href="http://sephhh.github.io/blog/2015/04/15/my-first-post-on-octopress/"/>
+    <title type="html"><![CDATA[||= Or Equals ||=]]></title>
+    <link href="http://sephhh.github.io/blog/2015/04/15/or-equals/"/>
     <updated>2015-04-15T16:50:22-04:00</updated>
-    <id>http://sephhh.github.io/blog/2015/04/15/my-first-post-on-octopress</id>
-    <content type="html"><![CDATA[<p>Or-Equals (||= also known as &ldquo;pipes-equals&rdquo;) is one of my favorite Ruby expressions I&rsquo;ve encountered so far. It strikes me as sort of polite and considerate&ndash;not as pushy and uncompromising as other Ruby methods. Plus it comes in handy all the time. Let me explain how it works and why it can be so useful.</p>
+    <id>http://sephhh.github.io/blog/2015/04/15/or-equals</id>
+    <content type="html"><![CDATA[<p>Or Equals (<code>||=</code> also known as Pipes Equals) is one of my favorite Ruby expressions I&rsquo;ve encountered so far. It strikes me as sort of polite and considerate&ndash;not as pushy and uncompromising as other Ruby methods. Plus it comes in handy all the time. Let me explain how it works and why it can be so useful.</p>
 
-<p>||= basically checks to see if a variable has something assigned to it besides nil or false. If it does, it stops right there and just leaves it be. If it doesn&rsquo;t, it assigns the variable a new value, whatever you supply on the right side of the expression.</p>
+<p><code>||=</code> basically checks to see if a variable has a value besides nil or false. If it does, <code>||=</code> stops right there and just leaves it be. If it doesn&rsquo;t, it assigns the variable a new value&ndash;the one you supply on the right side of the expression.</p>
 
-<p>So x ||= 10 checks x. If x is nil or false, it assigns x a value of 10. If x already has a value, ||= politely moves on without disturbing x at all. Here&rsquo;s where I imagine a sheepish Woody Allen voice&hellip; &ldquo;uh um sorry to trouble you but uh, if I may, just um, if you don&rsquo;t have a value already I have this other value for you and well um&hellip; you know, you can have it if you don&rsquo;t have one already.&rdquo;</p>
+<p>So <code>x ||= 10</code> checks <code>x</code>. If <code>x</code> is nil or false, it assigns <code>x</code> a value of <code>10</code>. If <code>x</code> already has a value, <code>||=</code> moves on without disturbing <code>x</code> at all. So polite and demure!</p>
 
-<p>To explain it more precisely, x ||= 10 is basically shorthand for x || x = 10. When Ruby looks at an or statement like this, it evaluates the first expression on the left, and if that expression evaluates to True, it doesn&rsquo;t bother looking at the right half, because it only takes one true expression to know that an or statement is true.</p>
+<iframe src="//giphy.com/embed/HQvoFeZbR5wD6" width="480" height="360" frameBorder="0" style="max-width: 100%" class="giphy-embed" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
-<p>There are two subtleties to note here. One, note that this is a little different from how other similar looking expressions work.
-x += 10
-is the same as
-x = (x+ 10)
-n
-but x ||= 10</p>
+
+<p><caption><em>So sorry to bother you, please carry on, I&rsquo;ll just&hellip; go&hellip; </em></caption></p>
+
+<h3>Or Equals in detail</h3>
+
+
+<p>To explain it more precisely, <code>x ||= 10</code> is basically shorthand for <code>x || x = 10</code>. When Ruby looks at an Or statement like this, it evaluates the expression on the left first, and if that expression evaluates to <code>true</code>, it doesn&rsquo;t bother looking at the right half, because as soon as you have one true expression you know that the entire Or statement is true.</p>
+
+<p>There are two subtleties to note here. One, note that this is a little different from how other similar looking expressions work.</p>
+
+<p>For example, the following expression:</p>
+
+<p><code>x += 10</code></p>
+
+<p>is the same as</p>
+
+<p><code>x = (x+ 10)</code></p>
+
+<p>but</p>
+
+<p><code>x ||= 10</code></p>
 
 <p>is NOT the same as</p>
 
-<p>x = (x || 10)</p>
+<p><code>x = (x || 10)</code></p>
 
-<p>rather x ||= 10 is more like</p>
+<p>rather <code>x ||= 10</code> is more like</p>
 
-<p>x || (x = 10)</p>
+<p><code>x || (x = 10)</code></p>
 
-<p>The difference is..</p>
+<p>The difference is subtle, but basically the point is that in <code>x||=10</code>, if <code>x</code> is truthy, that&rsquo;s the complete end of story, and Ruby does not bother performing ANY sort of assignment (not even the tautalogical assignment of <code>x = x</code>). That&rsquo;s why <code>x = (x || 10)</code> is not quite an accurate translation of <code>||=</code>. Ruby doesn&rsquo;t do anything with the <code>=</code> operator unless the value in question is falsy. You could see how this could make a difference in some scenarios, like if you are dealing with a custom getter method (i.e. <code>name=</code>) where the <code>=</code> operator does more than just perform a simple assignment.</p>
 
-<p>Another caveat&ndash;technically x||= 10 is not EXACTLY like x || (x = 10). In certain very specific scenarios they behave slightly differently (basically, blah, more details here).</p>
+<p>There&rsquo;s another small caveat&ndash;technically <code>x||= 10</code> is not EXACTLY like <code>x || (x = 10)</code>. If <code>x</code> is previously undefined, executing <code>x || (x = 10)</code> will throw you an undefined variable error, but <code>x||= 10</code> will work just fine. Proof, once more, of the polite nature of <code>||=</code>. (For more on this, and a deeper look under the hood in general, there&rsquo;s a good post by Peter Cooper <a href="http://www.rubyinside.com/what-rubys-double-pipe-or-equals-really-does-5488.html">here</a>)</p>
 
-<p>When is ||= useful? All the time! I find myself using it when iterating through a collection that might have repeats. It&rsquo;s great for setting up a counter too. For example, say we want sort through and count a bunch of pants. Each pair of pants is represented by a hash like this:</p>
+<h3>Handy usages</h3>
 
-<p>{type: jeans, color: blue}</p>
 
-<p>And say we want to combine a bunch of these hashes into a more organized hash like this:</p>
+<p>When is ||= useful? All the time! I find myself using it when iterating through a collection that might have repeats that need to be consolidated. It&rsquo;s great for setting up a counter too. For example, say we want sort through and count a bunch of pants. Each pair of pants is represented by a hash like this:</p>
 
-<p>{
-jeans: [{color: blue, count: 3}]</p>
+<p><code>{type: jeans, color: blue}</code></p>
 
-<p>slacks: [{color: black, count: 2}, {color: khaki, count: 1}]</p>
+<p>And say we want to combine a bunch of these hashes into a more organized hash like this:
+<code>ruby
+pants_hash = {
+:jeans =&gt; {
+  "blue" =&gt; {count: 3 },
+  "green" =&gt; {count: 1}
+  }
+:slacks =&gt; {
+  "black" =&gt; {count: 2 },
+  "khaki" =&gt; {count: 1 },
+  }
+:sweats =&gt; {
+  "gray" =&gt; {count: 1}
+  }
+</code>
+The following method takes the first type of hash and adds it to the second, using <code>||=</code> to build new keys when necessary without overwriting any existing keys in the organized hash.
+<code>ruby
+  def add_pants(single_pants_hash, organized_pants_hash)
+    type_key = single_pants_hash[:type].to_sym
+    color_key = single_pants_hash[:color]
+      #if this type of pant is not in the organized hash yet, add it here pointing to an empty hash
+    organized_pants_hash[type_key]||= {}
+      #same deal with color
+    organized_pants_hash[type_key][color_key] ||= {}
+      #add a count key-value pair to this inner hash if it doesn't exist yet
+    organized_pants_hash[type_key][color_key][:count]||= 0
+      #now you can safely increment the count.
+    organized_pants_hash[type_key][color_key][:count]+= 1
+  end
+</code></p>
 
-<p>sweats: [color: gray, count: 1]
-}</p>
+<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.
+&#8220;`ruby
+single_pants_array = [{type: &ldquo;jeans&rdquo;, color: &ldquo;blue&rdquo;},
+{type: &ldquo;slacks&rdquo;, color: &ldquo;black&rdquo;},
+{type: &ldquo;jeans&rdquo;, color: &ldquo;blue&rdquo;},
+{type: &ldquo;jeans&rdquo;, color: &ldquo;blue&rdquo;},
+{type: &ldquo;slacks&rdquo;, color: &ldquo;khaki&rdquo;},
+{type: &ldquo;slacks&rdquo;, color: &ldquo;khaki&rdquo;},
+{type: &ldquo;sweats&rdquo;, color: &ldquo;gray&rdquo;},
+{type: &ldquo;jeans&rdquo;, color: &ldquo;black&rdquo;},
+{type: &ldquo;slacks&rdquo;, color: &ldquo;blue&rdquo;},
+{type: &ldquo;sweats&rdquo;, color: &ldquo;black&rdquo;}]</p>
 
-<p>useful for aggregating&ndash;create an array or key-value pair if it doesn&rsquo;t exist, and add to it.</p>
+<p>single_pants_array.each_with_object({}) do |single_pants_hash, new_object|
+  add_pants(single_pants_hash, new_object)
+end</p>
 
-<p>(useful case 1)</p>
+<h1>=>{:jeans=>{&ldquo;blue&rdquo;=>{:count=>3}, &ldquo;black&rdquo;=>{:count=>1}}, :slacks=>{&ldquo;black&rdquo;=>{:count=>1}, &ldquo;khaki&rdquo;=>{:count=>2}, &ldquo;blue&rdquo;=>{:count=>1}}, :sweats=>{&ldquo;gray&rdquo;=>{:count=>1}, &ldquo;black&rdquo;=>{:count=>1}}}</h1>
 
-<p>(explain memoization and show useful case 2)</p>
+<p><code>``
+Tada! We get our organized pants hash, with all the counts added up. With the power of</code>||=` our method can handle new entries and repeats equally well.</p>
+
+<h3>Memoization</h3>
+
+
+<p><code>||=</code> can also be useful for memoization. To memoize basically just means to remember the result of a particular function call. If the function is meant to return the same result each time it&rsquo;s called, you should probably memoize that result. This is especially important if a function call is really laborious.</p>
+
+<p>The idea is, the first time you call the function, it runs in full, and then you store or cache the result somewhere. From then on, any time the function is called, instead of going through the long laborious code that produced the result the first time, you just spit out the result you have stored. <code>||=</code> provides a very simple way to do this.</p>
+
+<p>For example, here&rsquo;s a simple Dog class definition:</p>
+
+<pre><code class="ruby">class Dog
+  attr_accessor :name, :breed
+  def initialize(name, breed)
+    self.name = name
+    self.breed = breed
+  end
+
+  def pictures
+    #This method spits out 500 dog pictures from the internet
+    #Below is a magic function that finds all those pictures but takes a really long time
+    pics ||= internet_magic_stuff(500)
+  end
+end
+</code></pre>
+
+<p>The class is pretty simple, it has name and breed attributes and accessors. But then it also has a <code>pictures</code> method that&rsquo;s a lot more time-consuming. The first time the method is called, <code>pics</code> has no value, so it goes to the other side of the <code>||=</code> and runs <code>internet_magic_stuff(500)</code>, storing/memoizing the result in <code>pics</code>. That means the method will take a long time to run the first time it&rsquo;s called, but the second time the method is called, or any time after that, the method will just spit out the data it has stored in <code>pics</code> without bothering to call or even think about the labor-intensive <code>internet_magic_stuff</code> function.</p>
+
+<h3>Conclusion</h3>
+
+
+<p>I glommed on to <code>||=</code> pretty early into my Ruby learning experience, I think mostly because I just liked its vibe. But whether or not you appreciate it&rsquo;s subtle charm, <code>||=</code> is a very useful little expression, especially for memoization and certain iteration tasks.</p>
 ]]></content>
   </entry>
   
