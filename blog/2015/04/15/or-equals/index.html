@@ -226,13 +226,13 @@
 </span><span class='line'>  <span class="k">def</span> <span class="nf">pictures</span>
 </span><span class='line'>    <span class="c1">#This method spits out 500 dog pictures from the internet</span>
 </span><span class='line'>    <span class="c1">#Below is a magic function that finds all those pictures but takes a really long time</span>
-</span><span class='line'>    <span class="n">pics</span> <span class="o">||=</span> <span class="n">internet_magic_stuff</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@pictures</span> <span class="o">||=</span> <span class="n">internet_magic_stuff</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The class is pretty simple, it has name and breed attributes and accessors. But then it also has a <code>pictures</code> method that&rsquo;s a lot more time-consuming. The first time the method is called, <code>pics</code> has no value, so it goes to the other side of the <code>||=</code> and runs <code>internet_magic_stuff(500)</code>, storing/memoizing the result in <code>pics</code>. That means the method will take a long time to run the first time it&rsquo;s called, but the second time the method is called, or any time after that, the method will just spit out the data it has stored in <code>pics</code> without bothering to call or even think about the labor-intensive <code>internet_magic_stuff</code> function.</p>
+<p>The class is pretty simple, it has name and breed attributes and accessors. But then it also has a <code>pictures</code> method that&rsquo;s a lot more time-consuming. The first time the method is called, <code>@pictures</code> has no value, so it goes to the other side of the <code>||=</code> and runs <code>internet_magic_stuff(500)</code>, storing/memoizing the result in the instance variable <code>@pictures</code>. That means the method will take a long time to run the first time it&rsquo;s called, but the second time the method is called, or any time after that, the object will just spit out the data it has stored in <code>@pictures</code> without bothering to call or even think about the labor-intensive <code>internet_magic_stuff</code> function.</p>
 
 <h3>Conclusion</h3>
 
