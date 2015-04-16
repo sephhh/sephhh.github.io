@@ -124,12 +124,12 @@ class Dog
   def pictures
     #This method spits out 500 dog pictures from the internet
     #Below is a magic function that finds all those pictures but takes a really long time
-    pics ||= internet_magic_stuff(500)
+    @pictures ||= internet_magic_stuff(500)
   end
 end
 ```
 
-The class is pretty simple, it has name and breed attributes and accessors. But then it also has a `pictures` method that's a lot more time-consuming. The first time the method is called, `pics` has no value, so it goes to the other side of the `||=` and runs `internet_magic_stuff(500)`, storing/memoizing the result in `pics`. That means the method will take a long time to run the first time it's called, but the second time the method is called, or any time after that, the method will just spit out the data it has stored in `pics` without bothering to call or even think about the labor-intensive `internet_magic_stuff` function.
+The class is pretty simple, it has name and breed attributes and accessors. But then it also has a `pictures` method that's a lot more time-consuming. The first time the method is called, `@pictures` has no value, so it goes to the other side of the `||=` and runs `internet_magic_stuff(500)`, storing/memoizing the result in the instance variable `@pictures`. That means the method will take a long time to run the first time it's called, but the second time the method is called, or any time after that, the object will just spit out the data it has stored in `@pictures` without bothering to call or even think about the labor-intensive `internet_magic_stuff` function.
 
 <h3>Conclusion</h3>
 
