@@ -1,0 +1,137 @@
+---
+layout: post
+title: "||= Or Equals ||="
+date: 2015-04-15 16:50:22 -0400
+comments: true
+categories: [Flatiron School, First]
+---
+
+Or Equals (`||=` also known as Pipes Equals) is one of my favorite Ruby expressions I've encountered so far. It strikes me as sort of polite and considerate--not as pushy and uncompromising as other Ruby methods. Plus it comes in handy all the time. Let me explain how it works and why it can be so useful.
+
+`||=` basically checks to see if a variable has a value besides nil or false. If it does, `||=` stops right there and just leaves it be. If it doesn't, it assigns the variable a new value--the one you supply on the right side of the expression.
+
+So `x ||= 10` checks `x`. If `x` is nil or false, it assigns `x` a value of `10`. If `x` already has a value, `||=` moves on without disturbing `x` at all. So polite and demure!
+
+
+<iframe src="//giphy.com/embed/HQvoFeZbR5wD6" width="480" height="360" frameBorder="0" style="max-width: 100%" class="giphy-embed" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<caption><em>So sorry to bother you, please carry on, I'll just... go... </em></caption>
+
+<h3>Or Equals in detail</h3>
+
+To explain it more precisely, `x ||= 10` is basically shorthand for `x || x = 10`. When Ruby looks at an Or statement like this, it evaluates the expression on the left first, and if that expression evaluates to `true`, it doesn't bother looking at the right half, because as soon as you have one true expression you know that the entire Or statement is true.
+
+There are two subtleties to note here. One, note that this is a little different from how other similar looking expressions work.
+
+For example, the following expression: 
+
+`x += 10`
+
+is the same as 
+
+`x = (x+ 10)`
+
+but
+
+`x ||= 10`
+
+is NOT the same as
+
+`x = (x || 10)`
+
+rather `x ||= 10` is more like
+
+`x || (x = 10)`
+
+The difference is subtle, but basically the point is that in `x||=10`, if `x` is truthy, that's the complete end of story, and Ruby does not bother performing ANY sort of assignment (not even the tautalogical assignment of `x = x`). That's why `x = (x || 10)` is not quite an accurate translation of `||=`. Ruby doesn't do anything with the `=` operator unless the value in question is falsy. You could see how this could make a difference in some scenarios, like if you are dealing with a custom getter method (i.e. `name=`) where the `=` operator does more than just perform a simple assignment.
+
+There's another small caveat--technically `x||= 10` is not EXACTLY like `x || (x = 10)`. If `x` is previously undefined, executing `x || (x = 10)` will throw you an undefined variable error, but `x||= 10` will work just fine. Proof, once more, of the polite nature of `||=`. (For more on this, and a deeper look under the hood in general, there's a good post by Peter Cooper <a href="http://www.rubyinside.com/what-rubys-double-pipe-or-equals-really-does-5488.html">here</a>)
+
+
+<h3>Handy usages</h3>
+
+When is ||= useful? All the time! I find myself using it when iterating through a collection that might have repeats that need to be consolidated. It's great for setting up a counter too. For example, say we want sort through and count a bunch of pants. Each pair of pants is represented by a hash like this:
+
+`{type: jeans, color: blue}`
+
+And say we want to combine a bunch of these hashes into a more organized hash like this:
+```ruby
+pants_hash = {
+:jeans => { 
+  "blue" => {count: 3 },
+  "green" => {count: 1}
+  }
+:slacks => {
+  "black" => {count: 2 },
+  "khaki" => {count: 1 },
+  }
+:sweats => { 
+  "gray" => {count: 1}
+  }
+```
+The following method takes the first type of hash and adds it to the second, using `||=` to build new keys when necessary without overwriting any existing keys in the organized hash.
+```ruby
+  def add_pants(single_pants_hash, organized_pants_hash)
+    type_key = single_pants_hash[:type].to_sym
+    color_key = single_pants_hash[:color]
+      #if this type of pant is not in the organized hash yet, add it here pointing to an empty hash
+    organized_pants_hash[type_key]||= {}
+      #same deal with color
+    organized_pants_hash[type_key][color_key] ||= {}
+      #add a count key-value pair to this inner hash if it doesn't exist yet
+    organized_pants_hash[type_key][color_key][:count]||= 0
+      #now you can safely increment the count.
+    organized_pants_hash[type_key][color_key][:count]+= 1
+  end
+```
+
+Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn't matter if your organized has a ton of entries already, or if you are just now building it from scratch. Either way, this method won't overwrite anything because it's gingerly using `||=` throughout.
+```ruby
+single_pants_array = [{type: "jeans", color: "blue"},
+{type: "slacks", color: "black"},
+{type: "jeans", color: "blue"},
+{type: "jeans", color: "blue"},
+{type: "slacks", color: "khaki"},
+{type: "slacks", color: "khaki"},
+{type: "sweats", color: "gray"},
+{type: "jeans", color: "black"},
+{type: "slacks", color: "blue"},
+{type: "sweats", color: "black"}]
+
+single_pants_array.each_with_object({}) do |single_pants_hash, new_object|
+  add_pants(single_pants_hash, new_object)
+end
+
+#=>{:jeans=>{"blue"=>{:count=>3}, "black"=>{:count=>1}}, :slacks=>{"black"=>{:count=>1}, "khaki"=>{:count=>2}, "blue"=>{:count=>1}}, :sweats=>{"gray"=>{:count=>1}, "black"=>{:count=>1}}} 
+```
+Tada! We get our organized pants hash, with all the counts added up. With the power of `||=` our method can handle new entries and repeats equally well.
+
+<h3>Memoization</h3>
+
+`||=` can also be useful for memoization. To memoize basically just means to remember the result of a particular function call. If the function is meant to return the same result each time it's called, you should probably memoize that result. This is especially important if a function call is really laborious.
+
+The idea is, the first time you call the function, it runs in full, and then you store or cache the result somewhere. From then on, any time the function is called, instead of going through the long laborious code that produced the result the first time, you just spit out the result you have stored. `||=` provides a very simple way to do this.
+
+For example, here's a simple Dog class definition:
+
+```ruby
+class Dog
+  attr_accessor :name, :breed
+  def initialize(name, breed)
+    self.name = name
+    self.breed = breed
+  end
+
+  def pictures
+    #This method spits out 500 dog pictures from the internet
+    #Below is a magic function that finds all those pictures but takes a really long time
+    pics ||= internet_magic_stuff(500)
+  end
+end
+```
+
+The class is pretty simple, it has name and breed attributes and accessors. But then it also has a `pictures` method that's a lot more time-consuming. The first time the method is called, `pics` has no value, so it goes to the other side of the `||=` and runs `internet_magic_stuff(500)`, storing/memoizing the result in `pics`. That means the method will take a long time to run the first time it's called, but the second time the method is called, or any time after that, the method will just spit out the data it has stored in `pics` without bothering to call or even think about the labor-intensive `internet_magic_stuff` function.
+
+<h3>Conclusion</h3>
+
+I glommed on to `||=` pretty early into my Ruby learning experience, I think mostly because I just liked its vibe. But whether or not you appreciate it's subtle charm, `||=` is a very useful little expression, especially for memoization and certain iteration tasks. 
+
