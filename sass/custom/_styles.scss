@@ -1,2 +1,47 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
+@import "footnote";
+
+
+body {
+  background-color: #FFFFFF;
+  font-family: "Courier", sans-serif;
+}
+
+p
+{
+  font-family: "Helvetica", sans-serif;
+}
+
+a {
+  color: $color04;
+}
+
+article h2.title a {
+  color: $color04;
+  background-color: #BAFFFF;
+}
+article h2.title a:hover {
+    color: #BAFFFF;
+    background-color: $color04;
+}
+
+div.profile a:hover {
+    color: #BAFFFF;
+    background-color: $color04;
+}
+
+div.profile a {
+    color: $color04;
+    background-color: #BAFFFF;
+}
+
+/*h1.year {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+h3 {
+  background-color: #000000;
+  color: #FFFFFF;
+}*/
