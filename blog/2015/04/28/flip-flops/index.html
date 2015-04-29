@@ -1,24 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Seph's Blog]]></title>
-  <link href="http://sephhh.github.io/atom.xml" rel="self"/>
-  <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-28T23:08:53-04:00</updated>
-  <id>http://sephhh.github.io/</id>
-  <author>
-    <name><![CDATA[Seph Kramer]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>.. flip-flops .. | Seph&#8217;s Blog</title>
+
+	<meta name="author" content="Seph Kramer"> 
+	
+	<meta name="description" content="programming blog"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Seph's Blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+</head>
+
+
+
+<body>
+	<header id="header" class="inner"><a href="/"><h1>Seph&#8217;s Blog</h1></a>
+<nav id="main-nav"></nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post"><div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
 
   
-  <entry>
-    <title type="html"><![CDATA[.. flip-flops ..]]></title>
-    <link href="http://sephhh.github.io/blog/2015/04/28/flip-flops/"/>
-    <updated>2015-04-28T16:50:22-04:00</updated>
-    <id>http://sephhh.github.io/blog/2015/04/28/flip-flops</id>
-    <content type="html"><![CDATA[<p>Flip-flops are a funky and fairly obscure feature in Ruby. In fact, there have been <a href="https://bugs.ruby-lang.org/issues/5400">murmers</a> about flip-flops being removed in future versions of Ruby altogether. Most folks probably wouldn&rsquo;t notice if these things disappeared from Ruby tomorrow, but this quirky mechanism can be nifty and fun to play around with once you get the hang of it.</p>
+
+
+
+<time datetime="2015-04-28T16:50:22-04:00" pubdate data-updated="true">Apr 28th, 2015</time></div>
+</div>
+
+
+	<h2 class="title">.. Flip-flops ..</h2>
+	<div class="entry-content"><p>Flip-flops are a funky and fairly obscure feature in Ruby. In fact, there have been <a href="https://bugs.ruby-lang.org/issues/5400">murmers</a> about flip-flops being removed in future versions of Ruby altogether. Most folks probably wouldn&rsquo;t notice if these things disappeared from Ruby tomorrow, but this quirky mechanism can be nifty and fun to play around with once you get the hang of it.</p>
 
 <p>I first came across flip-flops in Konstantin Haase&rsquo;s <a href="https://vimeo.com/61087285">talk at Ruby Australia</a> where he talks about obfuscation and presents his 6-line implementation of Sinatra. In the talk, Haase presents the following code and asks what it will produce.</p>
 
@@ -322,205 +352,47 @@ Tadah!
   </div>
 </div>
 
-]]></content>
-  </entry>
+</div>
+
+
+<div class="sharing">
   
-  <entry>
-    <title type="html"><![CDATA[||= Or Equals ||=]]></title>
-    <link href="http://sephhh.github.io/blog/2015/04/15/or-equals/"/>
-    <updated>2015-04-15T16:50:22-04:00</updated>
-    <id>http://sephhh.github.io/blog/2015/04/15/or-equals</id>
-    <content type="html"><![CDATA[<p>Or Equals (<code>||=</code> also known as Pipes Equals) is one of my favorite Ruby expressions I&rsquo;ve encountered so far. It strikes me as sort of polite and considerate&ndash;not as pushy and uncompromising as other Ruby methods. Plus it comes in handy all the time. Let me explain how it works and why it can be so useful.</p>
-
-<p><code>||=</code> basically checks to see if a variable has a value besides nil or false. If it does, <code>||=</code> stops right there and just leaves it be. If it doesn&rsquo;t, it assigns the variable a new value&ndash;the one you supply on the right side of the expression.</p>
-
-<p>So <code>x ||= 10</code> checks <code>x</code>. If <code>x</code> is nil or false, it assigns <code>x</code> a value of <code>10</code>. If <code>x</code> already has a value, <code>||=</code> moves on without disturbing <code>x</code> at all. So polite and demure!</p>
-
-<iframe src="//giphy.com/embed/HQvoFeZbR5wD6" width="480" height="360" frameBorder="0" style="max-width: 100%" class="giphy-embed" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-
-
-<p><caption><em>So sorry to bother you, please carry on, I&rsquo;ll just&hellip; go&hellip; </em></caption></p>
-
-<h3>Or Equals in detail</h3>
-
-
-<p>To explain it more precisely, <code>x ||= 10</code> is basically shorthand for <code>x || x = 10</code>. When Ruby looks at an Or statement like this, it evaluates the expression on the left first, and if that expression evaluates to <code>true</code>, it doesn&rsquo;t bother looking at the right half, because as soon as you have one true expression you know that the entire Or statement is true.</p>
-
-<p>There are two subtleties to note here. One, note that this is a little different from how other similar looking expressions work.</p>
-
-<p>For example, the following expression:</p>
-
-<p><code>x += 10</code></p>
-
-<p>is the same as</p>
-
-<p><code>x = (x+ 10)</code></p>
-
-<p>but</p>
-
-<p><code>x ||= 10</code></p>
-
-<p>is NOT the same as</p>
-
-<p><code>x = (x || 10)</code></p>
-
-<p>rather <code>x ||= 10</code> is more like</p>
-
-<p><code>x || (x = 10)</code></p>
-
-<p>The difference is subtle, but basically the point is that in <code>x||=10</code>, if <code>x</code> is truthy, that&rsquo;s the complete end of story, and Ruby does not bother performing ANY sort of assignment (not even the tautalogical assignment of <code>x = x</code>). That&rsquo;s why <code>x = (x || 10)</code> is not quite an accurate translation of <code>||=</code>. Ruby doesn&rsquo;t do anything with the <code>=</code> operator unless the value in question is falsy. You could see how this could make a difference in some scenarios, like if you are dealing with a custom getter method (i.e. <code>name=</code>) where the <code>=</code> operator does more than just perform a simple assignment.</p>
-
-<p>There&rsquo;s another small caveat&ndash;technically <code>x||= 10</code> is not EXACTLY like <code>x || (x = 10)</code>. If <code>x</code> is previously undefined, executing <code>x || (x = 10)</code> will throw you an undefined variable error, but <code>x||= 10</code> will work just fine. Proof, once more, of the polite nature of <code>||=</code>. (For more on this, and a deeper look under the hood in general, there&rsquo;s a good post by Peter Cooper <a href="http://www.rubyinside.com/what-rubys-double-pipe-or-equals-really-does-5488.html">here</a>)</p>
-
-<h3>Handy usages</h3>
-
-
-<p>When is ||= useful? All the time! I find myself using it when iterating through a collection that might have repeats that need to be consolidated. It&rsquo;s great for setting up a counter too. For example, say we want sort through and count a bunch of pants. Each pair of pants is represented by a hash like this:</p>
-
-<p><code>{type: jeans, color: blue}</code></p>
-
-<p>And say we want to combine a bunch of these hashes into a more organized hash like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">pants_hash</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'><span class="ss">:jeans</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="s2">&quot;blue&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">count</span><span class="p">:</span> <span class="mi">3</span> <span class="p">},</span>
-</span><span class='line'>  <span class="s2">&quot;green&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">count</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="ss">:slacks</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="s2">&quot;black&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">count</span><span class="p">:</span> <span class="mi">2</span> <span class="p">},</span>
-</span><span class='line'>  <span class="s2">&quot;khaki&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">count</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="ss">:sweats</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'>  <span class="s2">&quot;gray&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">count</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The following method takes the first type of hash and adds it to the second, using <code>||=</code> to build new keys when necessary without overwriting any existing keys in the organized hash.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">add_pants</span><span class="p">(</span><span class="n">single_pants_hash</span><span class="p">,</span> <span class="n">organized_pants_hash</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">type_key</span> <span class="o">=</span> <span class="n">single_pants_hash</span><span class="o">[</span><span class="ss">:type</span><span class="o">].</span><span class="n">to_sym</span>
-</span><span class='line'>    <span class="n">color_key</span> <span class="o">=</span> <span class="n">single_pants_hash</span><span class="o">[</span><span class="ss">:color</span><span class="o">]</span>
-</span><span class='line'>      <span class="c1">#if this type of pant is not in the organized hash yet, add it here pointing to an empty hash</span>
-</span><span class='line'>    <span class="n">organized_pants_hash</span><span class="o">[</span><span class="n">type_key</span><span class="o">]||=</span> <span class="p">{}</span>
-</span><span class='line'>      <span class="c1">#same deal with color</span>
-</span><span class='line'>    <span class="n">organized_pants_hash</span><span class="o">[</span><span class="n">type_key</span><span class="o">][</span><span class="n">color_key</span><span class="o">]</span> <span class="o">||=</span> <span class="p">{}</span>
-</span><span class='line'>      <span class="c1">#add a count key-value pair to this inner hash if it doesn&#39;t exist yet</span>
-</span><span class='line'>    <span class="n">organized_pants_hash</span><span class="o">[</span><span class="n">type_key</span><span class="o">][</span><span class="n">color_key</span><span class="o">][</span><span class="ss">:count</span><span class="o">]||=</span> <span class="mi">0</span>
-</span><span class='line'>      <span class="c1">#now you can safely increment the count.</span>
-</span><span class='line'>    <span class="n">organized_pants_hash</span><span class="o">[</span><span class="n">type_key</span><span class="o">][</span><span class="n">color_key</span><span class="o">][</span><span class="ss">:count</span><span class="o">]+=</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now if you have a whole bunch of single pants hashes, you can call this method on each of them to add them to a more organized hash. The beauty is it doesn&rsquo;t matter if your organized hash has a ton of entries already, or if you are just now building it from scratch. Either way, this method won&rsquo;t overwrite anything because it&rsquo;s gingerly using <code>||=</code> throughout.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">single_pants_array</span> <span class="o">=</span> <span class="o">[</span><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;jeans&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;slacks&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;jeans&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;jeans&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;slacks&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;khaki&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;slacks&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;khaki&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;sweats&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;jeans&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;slacks&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
-</span><span class='line'><span class="p">{</span><span class="ss">type</span><span class="p">:</span> <span class="s2">&quot;sweats&quot;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">}</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">single_pants_array</span><span class="o">.</span><span class="n">each_with_object</span><span class="p">({})</span> <span class="k">do</span> <span class="o">|</span><span class="n">single_pants_hash</span><span class="p">,</span> <span class="n">new_object</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">add_pants</span><span class="p">(</span><span class="n">single_pants_hash</span><span class="p">,</span> <span class="n">new_object</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#=&gt;{:jeans=&gt;{&quot;blue&quot;=&gt;{:count=&gt;3}, &quot;black&quot;=&gt;{:count=&gt;1}}, :slacks=&gt;{&quot;black&quot;=&gt;{:count=&gt;1}, &quot;khaki&quot;=&gt;{:count=&gt;2}, &quot;blue&quot;=&gt;{:count=&gt;1}}, :sweats=&gt;{&quot;gray&quot;=&gt;{:count=&gt;1}, &quot;black&quot;=&gt;{:count=&gt;1}}} </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Tada! We get our organized pants hash, with all the counts added up. With the power of <code>||=</code> our method can handle new entries and repeats equally well.</p>
-
-<h3>Memoization</h3>
-
-
-<p><code>||=</code> can also be useful for memoization. To memoize basically just means to remember the result of a particular function call. If the function is meant to return the same result each time it&rsquo;s called, you should probably memoize that result. This is especially important if a function call is really laborious.</p>
-
-<p>The idea is, the first time you call the function, it runs in full, and then you store or cache the result somewhere. From then on, any time the function is called, instead of going through the long laborious code that produced the result the first time, you just spit out the result you have stored. <code>||=</code> provides a very simple way to do this.</p>
-
-<p>For example, here&rsquo;s a simple Dog class definition:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Dog</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:breed</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">breed</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">name</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">breed</span> <span class="o">=</span> <span class="n">breed</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">pictures</span>
-</span><span class='line'>    <span class="c1">#This method spits out 500 dog pictures from the internet</span>
-</span><span class='line'>    <span class="c1">#Below is a magic function that finds all those pictures but takes a really long time</span>
-</span><span class='line'>    <span class="vi">@pictures</span> <span class="o">||=</span> <span class="n">internet_magic_stuff</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The class is pretty simple, it has name and breed attributes and accessors. But then it also has a <code>pictures</code> method that&rsquo;s a lot more time-consuming. The first time the method is called, <code>@pictures</code> has no value, so it goes to the other side of the <code>||=</code> and runs <code>internet_magic_stuff(500)</code>, storing/memoizing the result in the instance variable <code>@pictures</code>. That means the method will take a long time to run the first time it&rsquo;s called, but the second time the method is called, or any time after that, the object will just spit out the data it has stored in <code>@pictures</code> without bothering to call or even think about the labor-intensive <code>internet_magic_stuff</code> function.</p>
-
-<h3>Conclusion</h3>
-
-
-<p>I glommed on to <code>||=</code> pretty early into my Ruby learning experience, I think mostly because I just liked its vibe. But whether or not you appreciate it&rsquo;s subtle charm, <code>||=</code> is a very useful little expression, especially for memoization and certain iteration tasks.</p>
-]]></content>
-  </entry>
+  <div class="sns-tw">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js  ';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
   
-</feed>
+  
+  
+</div>
+</article>
+</div>
+	<footer id="footer" class="inner"><div class="aboutme">
+<hr>
+  <div class="profile">
+    <a href="http://twitter.com/seph_k"><img class="icon" src=""></a>
+
+    <h3>Seph Kramer</h3>
+    <p><a href="http://twitter.com/seph_k">@seph_k</a></p>
+
+    <div class="codes">
+      <h4>Codes</h4>
+      <div class="github"><a href="https://github.com/sephhh">github.com/sephhh</a></div>
+    </div>
+  </div>
+
+  <div class="float_clear"></div>
+
+</div>
+Copyright &copy; 2015
+ Seph Kramer 
+<br>
+Powered by Octopress.
+
+
+
+</footer>
+	
+
+</body>
+</html>
