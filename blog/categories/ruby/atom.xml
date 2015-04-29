@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Seph's Blog]]></title>
   <link href="http://sephhh.github.io/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-28T23:10:20-04:00</updated>
+  <updated>2015-04-29T09:26:00-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -39,7 +39,7 @@ end
 end
 </code></pre>
 
-<p>When the first condition is met (<code>i==3</code>), you can imagine the switch flipping On, so the conditional if clause is executed, and the code prints <code>i</code>. That&rsquo;s all well and good&ndash;just what you&rsquo;d expect from an if statement when the condition is true. But here&rsquo;s the kicker: that if clause is executed the next time through the loop too, when <code>i</code> is 4. The flip-flop has been switched On, and that On or <code>true</code> state persists through subsequent interations. The if clause (in this case, <code>puts i</code>) continues to run on each iteration until the <em>second</em> condition is true (in this case, <code>i == 5</code>). That switches the flip-flop back off. If on a later iteration the first condition evalutes to true again, the flip-flop switches back On, and stays On, executing the if clause until the second condition is true again, and so on indefinitely.</p>
+<p>When the first condition is met (<code>i==3</code>), you can imagine the switch flipping On, so the conditional if clause is executed, and the code prints <code>i</code>. That&rsquo;s all well and good&ndash;just what you&rsquo;d expect from an if statement when the condition is true. But here&rsquo;s the kicker: that if clause is executed the next time through the loop too, when <code>i</code> is 4. The flip-flop has been switched On, and that On or <code>true</code> state persists through subsequent iterations. The if clause (in this case, <code>puts i</code>) continues to run on each iteration until the <em>second</em> condition is true (in this case, <code>i == 5</code>). That switches the flip-flop back off. If on a later iteration the first condition evalutes to true again, the flip-flop switches back On, and stays On, executing the if clause until the second condition is true again, and so on indefinitely.</p>
 
 <p>So now maybe it makes sense (kind of) how the code actually evaluates:</p>
 
