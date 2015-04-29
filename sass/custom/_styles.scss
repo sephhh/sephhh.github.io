@@ -5,11 +5,15 @@
 
 body {
   background-color: #FFFFFF;
-  font-family: "Courier", sans-serif;
 }
 
-p
+
+h1, h2, h3, h4, h5
 {
+  font-family: "Courier", monospace;
+}
+
+ul {
   font-family: "Helvetica", sans-serif;
 }
 
@@ -53,3 +57,28 @@ code.ruby {
 p code {
   font-family: "Courier", mono-space;
 }
+
+#container {
+   position: relative;
+}
+
+#background-text {
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   z-index: -1;
+   overflow: hidden;
+   color: #BAFFFF;
+   font-size: 2em;
+   width: 100%;
+   text-wrap: unrestricted;
+   word-wrap: break-word;
+}
+
+.big-caption {
+  font-size: 4em;
+}
+
+
