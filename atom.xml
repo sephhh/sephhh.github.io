@@ -4,7 +4,7 @@
   <title><![CDATA[Seph's Blog]]></title>
   <link href="http://sephhh.github.io/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-04-29T09:26:00-04:00</updated>
+  <updated>2015-05-12T23:29:50-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[My First Rails App: Lessons Learned]]></title>
+    <link href="http://sephhh.github.io/blog/2015/05/12/my-first-rails-app-lessons-learned/"/>
+    <updated>2015-05-12T22:00:59-04:00</updated>
+    <id>http://sephhh.github.io/blog/2015/05/12/my-first-rails-app-lessons-learned</id>
+    <content type="html"><![CDATA[<p>This past week me and <a href="https://github.com/tmurray002">Tim</a> built a Rails app called <a href="https://github.com/sephhh/ConcertCurator">ConcertCurator</a>. Basically this app lists a bunch of upcoming concerts in NYC and has some nice ways to browse through them. This is my first time working on a Rails app from scratch, and I thought I&rsquo;d blog about two challenges we ran into along the way, and the workarounds we found.</p>
+
+<h3>Challenge 1: Find Similar Show</h3>
+
+
+<p>One challenge was getting this button to work:</p>
+
+<p><img src="http://sephhh.github.io/images/genre_button.png" alt="Similar Show Button"></p>
+
+<p>The idea here is to take an event, and if the event has genres associated with it, find another show that has at least one of those generes associated with it too.</p>
+
+<p>The logic isn&rsquo;t super complex here, and we were able to get some code working before too long. But even though the button worked, it was extremely slow. Here&rsquo;s that first pass.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Inside the Event model</span>
+</span><span class='line'><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_similar_shows</span><span class="p">(</span><span class="n">genre_ids</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">select</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">event</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">any?</span> <span class="k">do</span> <span class="o">|</span><span class="n">artist</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">genre_ids</span> <span class="o">&amp;</span> <span class="n">artist</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">pluck</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span> <span class="o">!=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This method is inside the <code>Event</code> model. It works something like this:</p>
+
+<ul>
+  <li>Iterate through all the events</li>
+  <li>For each event, look through all the associated artists</li>
+  <li> Finally, for each artist see if it has any genres in common with the ones we passed in</li>
+  <li> If so, add that to the selection of events that the method returns</li>
+</ul>
+
+
+<p>The logic is sound here, and the code works, but it&rsquo;s SOOOO slow because it&rsquo;s making SOOOO many queries to the database. These nested iterations are really costly.</p>
+
+<p>Here&rsquo;s the refactored code. This new version is much faster:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Inside the Event model</span>
+</span><span class='line'><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_similar_shows</span><span class="p">(</span><span class="n">genre_id</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:artists</span> <span class="o">=&gt;</span> <span class="ss">:genres</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">genres</span><span class="p">:</span> <span class="p">{</span><span class="nb">id</span><span class="p">:</span> <span class="n">genre_id</span><span class="p">})</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This version uses <code>joins</code> to join the genres table to the events table through the artists table, then uses <code>where</code> to make a single query to that giant joined table. This version really cooperates with SQL much better and uses its strengths. Instead of querying the database a ton of times with little simple queries, we just make a single, complex query to the database and let SQL do more of the heavy lifting. This spits out a response muuuuch much faster than the original version.</p>
+
+<h3>Challenge 2: Loading a Map</h3>
+
+
+<p>On each page that shows an event or a venue, our app uses the Google Maps API to show the location of the venue.</p>
+
+<p><img src="http://sephhh.github.io/images/map_sample.png" alt="A Map on an Event Page"></p>
+
+<p>We didn&rsquo;t do anything super fancy here&ndash;we had each venue&rsquo;s longitude and latitude from another API so we just had to plug that in and render a map.</p>
+
+<p>The tricky part was getting the map to actually show up on the page. At first we had a bug where, when we first navigated to a page, no map would show, but then after manually refreshing it would pop up. What gives?</p>
+
+<p>Here&rsquo;s our original code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">function</span> <span class="kp">initialize</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">myLatlng</span> <span class="o">=</span> <span class="sr">//</span><span class="n">grab</span> <span class="n">lat</span><span class="o">-</span><span class="n">long</span> <span class="n">of</span> <span class="n">current</span> <span class="n">venue</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">my_venue</span> <span class="o">=</span> <span class="sr">//</span><span class="n">grab</span> <span class="n">the</span> <span class="n">venue</span> <span class="nb">name</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">mapOptions</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="sr">//m</span><span class="n">ap</span> <span class="n">options</span> <span class="n">here</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">map</span> <span class="o">=</span> <span class="kp">new</span> <span class="n">google</span><span class="o">.</span><span class="n">maps</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;map-canvas&#39;</span><span class="p">),</span>
+</span><span class='line'>      <span class="n">mapOptions</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">marker</span> <span class="o">=</span> <span class="kp">new</span> <span class="n">google</span><span class="o">.</span><span class="n">maps</span><span class="o">.</span><span class="n">Marker</span><span class="p">({</span>
+</span><span class='line'>  <span class="ss">position</span><span class="p">:</span> <span class="n">myLatlng</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">map</span><span class="p">:</span> <span class="n">map</span><span class="p">,</span>
+</span><span class='line'>  <span class="ss">title</span><span class="p">:</span> <span class="n">my_venue</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">google</span><span class="o">.</span><span class="n">maps</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">addDomListener</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="kp">initialize</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Basically, this code sets up some variabales we need for the map inside an <code>initialize</code> function. Then, the last line listens for the window <code>load</code> event, at which point it calls <code>initialize</code> and renders the map. So why did we have to refresh the page to trigger this? Why didn&rsquo;t the window <code>load</code> event trigger our function every time we navigated to the page?</p>
+
+<p>The answer has to do with Turbolinks!!!</p>
+
+<iframe src="//giphy.com/embed/cRH5deQTgTMR2" width="480" height="360" frameBorder="0" style="max-width: 100%" class="giphy-embed" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+
+
+
+<h4>Turbolinks</h4>
+
+
+<p>Turbolinks are this feature built into Rails that loads the page without &ldquo;really&rdquo; &ldquo;loading&rdquo; the &ldquo;page&rdquo;. When you click on a link, it uses an AJAX call to just swap in the new body of the page, rather than loading the whole page from scratch. This makes clicking around faster, which is all well and good, but it doesn&rsquo;t trigger the window &lsquo;load&rsquo; event that our code is patiently listening for.</p>
+
+<p>So here&rsquo;s the fix&ndash;just need to add one more line of code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">google</span><span class="o">.</span><span class="n">maps</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">addDomListener</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="kp">initialize</span><span class="p">);</span>
+</span><span class='line'><span class="n">google</span><span class="o">.</span><span class="n">maps</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">addDomListener</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="s1">&#39;page:load&#39;</span><span class="p">,</span> <span class="kp">initialize</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, on top of listening to the normal window <code>load</code> event, we&rsquo;re also listening for the <code>page:load</code> event. This is a special event that Turbolinks creates&ndash;since it&rsquo;s bypassing a normal load, Turbolinks gives us this alternate way for us to hook into this part of the cycle and trigger our <code>initialize</code> function. See <a href="https://github.com/rails/turbolinks/blob/master/README.md">here</a> for more documentation on Turbolinks.</p>
+
+<h3>Conclusion</h3>
+
+
+<p>Building this app was a lot of fun! Even some of the tricker parts were satisfying to work through. These two challenges I just walked through I thought were particularly interesting, and definitely taught me some handy lessons. Hope you agree!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[.. Flip-flops ..]]></title>

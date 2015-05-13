@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://sephhh.github.io/blog/2015/05/12/my-first-rails-app-lessons-learned/</loc>
+    <lastmod>2015-05-12T22:00:59-04:00</lastmod>
+  </url>
+  <url>
     <loc>http://sephhh.github.io/blog/2015/04/28/flip-flops/</loc>
     <lastmod>2015-04-28T16:50:22-04:00</lastmod>
   </url>
@@ -25,5 +29,17 @@
   </url>
   <url>
     <loc>http://sephhh.github.io/blog/categories/ruby/</loc>
+  </url>
+  <url>
+    <loc>http://sephhh.github.io/blog/categories/rails/</loc>
+  </url>
+  <url>
+    <loc>http://sephhh.github.io/blog/categories/turbolinks/</loc>
+  </url>
+  <url>
+    <loc>http://sephhh.github.io/blog/categories/google-maps/</loc>
+  </url>
+  <url>
+    <loc>http://sephhh.github.io/blog/categories/concertcurator/</loc>
   </url>
 </urlset>
