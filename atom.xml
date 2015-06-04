@@ -4,7 +4,7 @@
   <title><![CDATA[Seph's Blog]]></title>
   <link href="http://sephhh.github.io/atom.xml" rel="self"/>
   <link href="http://sephhh.github.io/"/>
-  <updated>2015-05-12T23:29:50-04:00</updated>
+  <updated>2015-06-04T10:22:06-04:00</updated>
   <id>http://sephhh.github.io/</id>
   <author>
     <name><![CDATA[Seph Kramer]]></name>
@@ -12,6 +12,237 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Playing with the Canvas: Trippy Text]]></title>
+    <link href="http://sephhh.github.io/blog/2015/06/03/playing-with-the-canvas-trippy-text/"/>
+    <updated>2015-06-03T22:28:55-04:00</updated>
+    <id>http://sephhh.github.io/blog/2015/06/03/playing-with-the-canvas-trippy-text</id>
+    <content type="html"><![CDATA[<p>Here&rsquo;s a little doo-hickey I made:</p>
+
+<p data-height="268" data-theme-id="0" data-slug-hash="ZGLMKm" data-default-tab="result" data-user="sephhh" class='codepen'>See the Pen <a href='http://codepen.io/sephhh/pen/ZGLMKm/'>Trippy Text</a> by Seph Kramer (<a href='http://codepen.io/sephhh'>@sephhh</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+
+
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+
+
+<p>Some text bounces around the screen, changing colors (controlled in part by mouse movements). You can click to move the text, and if you press return you can type in your own text.</p>
+
+<p>A few reasons I made this:</p>
+
+<ul>
+    <li>I wanted to play around with an HTML5 Canvas</li>
+    <li>I wanted to get some practice with jQuery event handlers</li>
+    <li>I wanted something that was kinda fun to play with!</li>
+</ul>
+
+
+<p>Here I thought I&rsquo;d walk through some basics of using JavaScript to draw on a <code>&lt;canvas&gt;</code> element, and explain a bit of my code.</p>
+
+<h3>Using the Canvas</h3>
+
+
+<p>The first thing you need is a <code>&lt;canvas&gt;</code> element. You&rsquo;ll probably want to give it an id too so you can easily select it with JavaScript. Here I&rsquo;m also giving it a width and height, as well as a border to make it easier to see on the page.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;myCanvas&quot;</span> <span class="na">height=</span><span class="s">200</span> <span class="na">width=</span><span class="s">200</span> <span class="na">style=</span><span class="s">&quot;border:1px solid #000000&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now to start drawing on this canvas we need to create a new <em>context</em>. By creating this context, you get a JavaScript object that you can call a bunch of methods on to render things on your canvas.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="c1">// set up initial variables</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;myCanvas&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//...more to come</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here I select the canvas element, save it as <code>c</code>. Then I create a context object, which I save as <code>ctx</code> by calling <code>c.getContext("2d")</code>. (<code>getContext</code> also accepts <code>webgl</code> as an argument if you want to mess with 3D, but that&rsquo;s a whole other story).</p>
+
+<p>Now we can call all kinds of methods on <code>ctx</code> to start drawing stuff. Here&rsquo;s how to draw some simple lines:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><canvas id="canvas1" height=200 width=200 style="border:1px solid #000000;"></canvas></p>
+
+<p>You can imagine this code is controlling a pen. <code>moveTo</code> moves the pen point to a pixel location on the canvas, then <code>lineTo</code> tells it to put down the point and draw to another location. But nothing will actually appear on the canvas until we call <code>stroke</code>.</p>
+
+<p>There&rsquo;s plenty of other methods for drawing other shapes and text, but let&rsquo;s move on to making a simple animation.</p>
+
+<h3>A Simple Animation</h3>
+
+
+<p>Here I&rsquo;ll animate a red circle so that it floats across the canvas. Here&rsquo;s a function that takes an x-coordinate and draws a red circle there:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">drawCircle</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">arc</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s pretty easy to make the circle move across the screen&ndash;all we need to do is repeat the following steps very quickly:</p>
+
+<ul>
+    <li>Clear off the canvas</li>
+    <li>Draw a circle at pixel x</li>
+    <li>Increment x</li>
+</ul>
+
+
+<p>Here&rsquo;s the code to do that:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="c1">//clear out the entire canvas</span>
+</span><span class='line'>  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//draw a circle at x</span>
+</span><span class='line'>  <span class="nx">drawCircle</span><span class="p">(</span><span class="nx">x</span><span class="o">%</span><span class="mi">200</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//increment x</span>
+</span><span class='line'>  <span class="nx">x</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'><span class="p">},</span> <span class="mi">25</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here I use <code>setInterval</code> to run a function every 25 milliseconds. Each time that function runs, it clears the screen, draws a new circle, then increments <code>x</code> so the circle will be drawn slightly to the right next time around. I use modulo in the expression <code>x%200</code> to make the circle wrap around the canvas once <code>x</code> is higher than 200.</p>
+
+<p><canvas id="canvas2" height=200 width=200 style="border:1px solid #000000;"></canvas></p>
+
+<h3>Trippy Text Event Handlers</h3>
+
+
+<p>For my little trippy text toy, I use <code>setInterval</code> the same way, but with a little extra logic. During each animation step I have to check if the text needs to bounce, plus I oscillate the blue value of the text&rsquo;s color during each step. Also, I skip clearing the screen at each step so that the trail of the text remains on screen.</p>
+
+<p>On top of that I added a couple of jQuery handlers to allow some interaction. This one responds to mouse movements to change the color of the text:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">mousemove</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">tt</span><span class="p">.</span><span class="nx">gValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">pageX</span><span class="o">*</span><span class="nx">lScale</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">tt</span><span class="p">.</span><span class="nx">rValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">pageY</span><span class="o">*</span><span class="nx">hScale</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, <code>tt</code> is an object I defined to represent the floating text. When the mouse moves, I use the mouse&rsquo;s x and y location, scale it to a value between 0 and 256, and set the <code>gValue</code> and <code>rValue</code> of the text object accordingly, changing it&rsquo;s color.</p>
+
+<p>Here&rsquo;s the code that moves the text when you click the screen.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="nx">tt</span><span class="p">.</span><span class="nx">xBuffer</span><span class="p">()){</span>
+</span><span class='line'>       <span class="nx">tt</span><span class="p">.</span><span class="nx">textX</span> <span class="o">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="nx">tt</span><span class="p">.</span><span class="nx">xBuffer</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>       <span class="nx">tt</span><span class="p">.</span><span class="nx">textX</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pageX</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">){</span>
+</span><span class='line'>       <span class="nx">tt</span><span class="p">.</span><span class="nx">textY</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>       <span class="nx">tt</span><span class="p">.</span><span class="nx">textY</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pageY</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The basic idea is that when the canvas is clicked, the text should move to that click location. But first I check to see if the click is too close to an edge of the canvas, in which case I make sure there is a buffer (i.e. <code>tt.xbuffer</code>) between the text and the edge of the canvas (<code>c.width</code>).</p>
+
+<h3>Conclusion</h3>
+
+
+<p>That&rsquo;s a quick rundown of working with a canvas in JavaScript, and some basics features of my little toy. It&rsquo;s pretty easy to start having fun with the canvas, I definitely recommend fooling around with it sometime.</p>
+
+<script>
+  var c1 = document.getElementById("canvas1");
+  var ctx1 = c1.getContext("2d");
+ 
+  ctx1.beginPath();
+  ctx1.moveTo(100,0);
+  ctx1.lineTo(100,200);
+  ctx1.moveTo(0,100);
+  ctx1.lineTo(200,100);
+  ctx1.stroke();
+
+  var c2 = document.getElementById("canvas2");
+  var ctx2 = c2.getContext("2d");
+  
+  function drawCircle(x){
+    ctx2.beginPath();
+    ctx2.arc(x,100,10,0,2*Math.PI);
+    ctx2.fillStyle="red";
+    ctx2.fill();
+  }
+
+  var x = 0;
+
+  setInterval(function(){ 
+    //clear out the entire canvas
+    ctx2.clearRect(0,0,200,200);
+    //draw a circle at x
+    drawCircle(x%200);
+    //increment x
+    x++;
+}, 25);
+
+</script>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[My First Rails App: Lessons Learned]]></title>
